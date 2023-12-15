@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <script src="https://www.haxball.com/PwfmUfRI/__cache_static__/g/vendor/json5.min.js"></script>
+    <!-- json5 library -->
+    <script src="https://www.haxball.com/PwfmUfRI/__cache_static__/g/vendor/pako-jszip.min.js"></script>
+    <!-- pako library -->
+    <script src="https://cdn.jsdelivr.net/gh/wxyz-abcd/node-haxball@latest/src/api.js"></script>
+    <!-- this file comes from this repo -->
+  </head>
+  <body>
+    <script>
+      var {
+        OperationType,
+        VariableType,
+        ConnectionState,
+        AllowFlags,
+        Direction,
+        CollisionFlags,
+        CameraFollow,
+        BackgroundType,
+        GamePlayState,
+        Callback,
+        Utils,
+        Room,
+        Replay,
+        Query,
+        Library,
+        RoomConfig,
+        Plugin,
+        Renderer,
+        Errors,
+        Language,
+        Impl,
+      } = abcHaxballAPI(window);
+      // You do not need a proxy server if you use browser's extension mechanism.
+      Room.create(
+        {
+          name: 'AAAAAAAAAAAAAAAAABox',
+          password: 'test',
+          showInRoomList: true,
+          maxPlayerCount: 8,
+          token: 'thr1.AAAAAGV8amO4sO8Amkm5UQ.557-Pvyq9Ok',
+        },
+        {
+          storage: {
+            player_name: 'wxyz-abcd',
+            avatar: '👽',
+          },
+          onSuccess: async (room) => {
+            await room.sendChat('Hello ' + room.name);
+            room.onAfterRoomLink = async (roomLink) => {
+              console.log('room link:', roomLink);
+            };
+          },
+        }
+      );
+    </script>
+  </body>
+</html>
