@@ -1,6 +1,6 @@
 const { REST, Routes, Client, GatewayIntentBits } = require('discord.js');
 const { createRoom } = require('./createRoom');
-const TOKEN = 'MTE4NTI2MTM5NDY2OTYwNDkwNA.Gm6GLy.w8dfk1cCm6SZuQdIFSYEc5cr9dKyYqCGSNddJA';
+const TOKEN = 'MTE4NTI2MTM5NDY2OTYwNDkwNA.GC3l9f.gT6ka4cUpyhKUYLOqNhVj94jTuuucHQvm22AE8';
 const CLIENT_ID = '1185261394669604904';
 const commands = [
   {
