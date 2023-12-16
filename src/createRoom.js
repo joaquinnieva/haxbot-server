@@ -2,16 +2,19 @@ const HaxballJS = require('haxball.js');
 const { haxCommands, channelId } = require('./functions.js');
 const futsal = require('./stadium.js');
 const express = require('express');
+const { HaxNotification } = require('./consts.js');
 const app = express();
 const port = 3000;
+
 let server;
 const closeRoom = () => {
   server?.close((err) => {
-    console.log('server closed');
+    console.log('Server closed');
     process?.exit(err ? 1 : 0);
   });
 };
-const createRoom = (client) => {
+
+const createRoom = ({ client, token }) => {
   server && closeRoom();
   server = app.listen(port, () => {
     HaxballJS.then((HBInit) => {
@@ -20,30 +23,38 @@ const createRoom = (client) => {
         roomName: 'Box',
         maxPlayers: 10,
         public: false,
-        noPlayer: true,
-        token: 'thr1.AAAAAGV8pTQ9J30W2WlcBg.S8oth5zywgg', // Required
+        noPlayer: false,
+        playerName: 'ADMIN',
+        token: token, // Required
       });
 
       room.setCustomStadium(futsal);
-      room.setScoreLimit(3);
-      room.setTimeLimit(0);
+      room.setScoreLimit(1);
+      room.setTimeLimit(3);
 
       room.onTeamVictory = async function (scores) {
+        console.log(scores);
+        const redwinner = scores.red > scores.blue;
+
+        if (redwinner) {
+          room.sendAnnouncement(`✨ Rojo gana ${scores.red} - ${scores.blue} | Partidazo pero esto sigueeee!`, null, 0xffefd6, 'bold', HaxNotification.CHAT);
+        } else if (winner == Team.BLUE) {
+          room.sendAnnouncement(`✨ Azul gana ${scores.blue} - ${scores.red} | Partidazo pero esto sigueeee!`, null, 0xffefd6, 'bold', HaxNotification.CHAT);
+        }
         await haxCommands?.(room)?.['!start']?.();
       };
 
-      room.onPlayerJoin = function (player) {
-        room.setPlayerAdmin(player.id, true); // Give admin to the first non admin player in the list
-      };
-
       room.onPlayerChat = async function (player, msg) {
-        await haxCommands?.(room)?.[msg]?.();
+        await haxCommands?.(room)?.[msg]?.(player);
       };
 
       room.onRoomLink = async function (link) {
-        const channel = await client.channels.fetch(channelId);
-        channel.send(`Chicos, acaba de caerse un link: ${link} , ¿Quién fue el desubicado?`);
+        console.log(link);
+        // const channel = await client.channels.fetch(channelId);
+        // channel.send(`Chicos, acaba de caerse un link: ${link} , ¿Quién fue el desubicado?`);
       };
+    }).catch((err) => {
+      console.error(err);
     });
   });
 };

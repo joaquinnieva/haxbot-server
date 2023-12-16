@@ -1,9 +1,11 @@
-const channelId = '1133863506081493084';
+const { channelId } = require('./consts');
+
 const haxCommands = (room) => ({
   '!start': () => {
     room.stopGame();
     const players = room.getPlayerList();
-    const playerIds = players.map((p) => p.id);
+    console.log(players);
+    const playerIds = players.filter((p) => p.name !== 'ADMIN').map((p) => p.id);
     const reorderPlayerIds = shuffle(playerIds);
     const halfwayThrough = Math.floor(reorderPlayerIds.length / 2);
     const teamOne = reorderPlayerIds.slice(0, halfwayThrough);
@@ -14,11 +16,20 @@ const haxCommands = (room) => ({
     for (const playerId of teamTwo) {
       room.setPlayerTeam(playerId, 2);
     }
-    room.startGame();
+    setTimeout(() => {
+      room.startGame();
+    }, 1000);
   },
   '!stats': async () => {
     const channel = await client.channels.fetch(channelId);
     channel.send('Estas son las stats');
+  },
+  '!admin': (player) => room.setPlayerAdmin(player.id, true),
+  '!rr': () => {
+    room.stopGame();
+    setTimeout(() => {
+      room.startGame();
+    }, 10);
   },
 });
 

@@ -1,25 +1,11 @@
 const { REST, Routes, Client, GatewayIntentBits } = require('discord.js');
-const { createRoom } = require('./createRoom');
-const TOKEN = 'MTE4NTI2MTM5NDY2OTYwNDkwNA.GC3l9f.gT6ka4cUpyhKUYLOqNhVj94jTuuucHQvm22AE8';
-const CLIENT_ID = '1185261394669604904';
-const commands = [
-  {
-    name: 'stats',
-    description: 'Replies with stats!',
-  },
-  {
-    name: 'create',
-    description: 'Open a room!',
-  },
-  {
-    name: 'close',
-    description: 'Close a room!',
-  },
-];
+const { createRoom, closeRoom } = require('./createRoom');
+const { TOKEN, commands, CLIENT_ID, tokenHaxball } = require('./consts');
+let token = tokenHaxball;
 
 // -----------------
-const rest = new REST({ version: '10' }).setToken(TOKEN);
-const action = async () => {
+const initDiscordBot = async () => {
+  const rest = new REST({ version: '10' }).setToken(TOKEN);
   try {
     console.log('Started refreshing application (/) commands.');
     await rest.put(Routes.applicationCommands(CLIENT_ID), { body: commands });
@@ -28,8 +14,8 @@ const action = async () => {
     console.error(error);
   }
 };
-action();
-
+initDiscordBot();
+createRoom({ token });
 // -----------------
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.on('ready', () => {
@@ -38,14 +24,34 @@ client.on('ready', () => {
 client.on('interactionCreate', async (interaction) => {
   // console.log('interaction', interaction);
   if (!interaction.isChatInputCommand()) return;
-  if (interaction.commandName === 'stats') {
-    await interaction.reply('Stats haxball');
-  }
   if (interaction.commandName === 'create') {
-    createRoom(client);
+    createRoom({ client, token });
+    await interaction.reply('Uff');
   }
   if (interaction.commandName === 'close') {
-    closeRoom(client);
+    closeRoom();
+    await interaction.reply('que hace??¿');
+  }
+  if (interaction.commandName === 'stats') {
+    await interaction.reply('Estas son las stats');
+  }
+});
+
+client.on('messageCreate', (message) => {
+  if (message.author.bot) return;
+  // This is where we'll put our code.
+  if (message.content.indexOf('!') !== 0) return;
+
+  const args = message.content.slice('!'.length).trim().split(/ +/g);
+  const command = args.shift().toLowerCase();
+
+  if (command === 'ping') {
+    message.channel.send('Pong!');
+  }
+  if (command === 'token') {
+    closeRoom();
+    message.channel.send('Se actualizó el token de la sala');
+    createRoom({ client, token: args[0] });
   }
 });
 const startBot = () => client.login(TOKEN);
