@@ -39,18 +39,17 @@ client.on('interactionCreate', async (interaction) => {
 
 client.on('messageCreate', (message) => {
   if (message.author.bot) return;
-  // This is where we'll put our code.
-  if (message.content.indexOf('!') !== 0) return;
+  if (message.content.indexOf('/') !== 0) return;
 
-  const args = message.content.slice('!'.length).trim().split(/ +/g);
+  const args = message.content.slice('/'.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
 
-  if (command === 'ping') {
-    message.channel.send('Pong!');
+  if (command === 'q') {
+    message.channel.send('q');
   }
   if (command === 'token') {
     closeRoom();
-    message.channel.send('Se actualizó el token de la sala');
+    message.channel.send('Actualizando link...');
     createRoom({ client, token: args[0] });
   }
 });

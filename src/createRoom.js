@@ -33,13 +33,18 @@ const createRoom = ({ client, token }) => {
       room.setTimeLimit(3);
 
       room.onTeamVictory = async function (scores) {
-        console.log(scores);
+        const channel = { send: () => {} };
+        // const channel = await client.channels.fetch(channelId);
         const redwinner = scores.red > scores.blue;
-
+        const players = room.getPlayerList();
+        const red = players.filter((p) => p.name !== 'ADMIN').map((p) => p.team === 1);
+        const blue = players.filter((p) => p.name !== 'ADMIN').map((p) => p.team === 2);
         if (redwinner) {
           room.sendAnnouncement(`✨ Rojo gana ${scores.red} - ${scores.blue} | Partidazo pero esto sigueeee!`, null, 0xffefd6, 'bold', HaxNotification.CHAT);
-        } else if (winner == Team.BLUE) {
+          channel.send(`Ganan 3 puntos: ${red.map((p) => p.name).join(',')}`);
+        } else {
           room.sendAnnouncement(`✨ Azul gana ${scores.blue} - ${scores.red} | Partidazo pero esto sigueeee!`, null, 0xffefd6, 'bold', HaxNotification.CHAT);
+          channel.send(`Ganan 3 puntos: ${blue.map((p) => p.name).join(',')}`);
         }
         await haxCommands?.(room)?.['!start']?.();
       };

@@ -4,7 +4,6 @@ const haxCommands = (room) => ({
   '!start': () => {
     room.stopGame();
     const players = room.getPlayerList();
-    console.log(players);
     const playerIds = players.filter((p) => p.name !== 'ADMIN').map((p) => p.id);
     const reorderPlayerIds = shuffle(playerIds);
     const halfwayThrough = Math.floor(reorderPlayerIds.length / 2);
