@@ -33,8 +33,8 @@ const createRoom = ({ client, token }) => {
       room.setTimeLimit(3);
 
       room.onTeamVictory = async function (scores) {
-        const channel = { send: () => {} };
-        // const channel = await client.channels.fetch(channelId);
+        // const channel = { send: () => {} };
+        const channel = await client.channels.fetch(channelId);
         const redwinner = scores.red > scores.blue;
         const players = room.getPlayerList();
         const red = players.filter((p) => p.name !== 'ADMIN').map((p) => p.team === 1);

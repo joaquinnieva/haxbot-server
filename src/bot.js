@@ -15,11 +15,12 @@ const initDiscordBot = async () => {
   }
 };
 initDiscordBot();
-createRoom({ token });
+
 // -----------------
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
+  createRoom({ token, client });
 });
 client.on('interactionCreate', async (interaction) => {
   // console.log('interaction', interaction);
