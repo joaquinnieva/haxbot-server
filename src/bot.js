@@ -43,7 +43,7 @@ client.on('messageCreate', (message) => {
 
   const args = message.content.slice('/'.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
-
+  console.log(command);
   if (command === 'q') {
     message.channel.send('q');
   }

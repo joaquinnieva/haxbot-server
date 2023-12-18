@@ -55,8 +55,8 @@ const createRoom = ({ client, token }) => {
 
       room.onRoomLink = async function (link) {
         console.log(link);
-        // const channel = await client.channels.fetch(channelId);
-        // channel.send(`Chicos, acaba de caerse un link: ${link} , ¿Quién fue el desubicado?`);
+        const channel = await client.channels.fetch(channelId);
+        channel.send(`Chicos, acaba de caerse un link: ${link} , ¿Quién fue el desubicado?`);
       };
     }).catch((err) => {
       console.error(err);
