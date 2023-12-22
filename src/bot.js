@@ -1,6 +1,6 @@
 const { REST, Routes, Client, GatewayIntentBits } = require('discord.js');
 const { createRoom, closeRoom } = require('./createRoom');
-const { TOKEN, commands, CLIENT_ID, tokenHaxball } = require('./consts');
+const { TOKEN, commands, CLIENT_ID, tokenHaxball, stats } = require('./consts');
 let token = tokenHaxball;
 
 // -----------------
@@ -23,7 +23,7 @@ client.on('ready', () => {
   createRoom({ token, client });
 });
 client.on('interactionCreate', async (interaction) => {
-  // console.log('interaction', interaction);
+  console.log('interaction', interaction);
   if (!interaction.isChatInputCommand()) return;
   if (interaction.commandName === 'create') {
     createRoom({ client, token });
@@ -34,15 +34,25 @@ client.on('interactionCreate', async (interaction) => {
     await interaction.reply('que hace??¿');
   }
   if (interaction.commandName === 'stats') {
-    await interaction.reply('Estas son las stats');
+    if (Object.entries(stats.current).length === 0) {
+      await interaction.reply('Todavia no hay stats');
+      return;
+    }
+    await interaction.reply(`Estas son las stats \n
+    ${Object.entries(stats.current).map(([name, points]) => `${name} sumó ${points} \n`)}
+    `);
+  }
+  if (interaction.commandName === 'token') {
+    await interaction.reply('Primero compren manos,despues actualizen el token');
   }
 });
 
-client.on('messageCreate', (message) => {
+client.on('message', (message) => {
+  console.log(message);
   if (message.author.bot) return;
-  if (message.content.indexOf('/') !== 0) return;
+  if (message.content.indexOf('!') !== 0) return;
 
-  const args = message.content.slice('/'.length).trim().split(/ +/g);
+  const args = message.content.slice('!'.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
   console.log(command);
   if (command === 'q') {

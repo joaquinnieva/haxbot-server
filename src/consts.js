@@ -19,7 +19,8 @@ const commands = [
   },
 ];
 const channelId = '1133863506081493084';
-const tokenHaxball = 'thr1.AAAAAGWAaRufp_-zJHbDeg.XYRBLJy4JTE';
+const tokenHaxball = 'thr1.AAAAAGWEkP9udoGNI2c9Bw.wNeBqdPX1FU';
 const HaxNotification = { NONE: 0, CHAT: 1, MENTION: 2 };
+const stats = { current: {} };
 
-module.exports = { commands, CLIENT_ID, TOKEN, channelId, tokenHaxball, HaxNotification };
+module.exports = { commands, CLIENT_ID, TOKEN, channelId, tokenHaxball, HaxNotification, stats };
